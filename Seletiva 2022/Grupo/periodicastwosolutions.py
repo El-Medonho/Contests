@@ -10,29 +10,22 @@ numbers = []
 for i in range(len(inp)):
     numbers.append(int(inp[i]))
 
-num1 = numbers[0]
-num2 = numbers[1]
-mmc = 1
+num1 = 1
+num2 = 1
+mmc = numbers[0]
 mdc = 0
 
-while num1 % num2 != 0 and num2 % num1 != 0:
-    c = num1 % num2
-    num1 = num2
-    num2 = c
 
-mmc = numbers[0] * numbers[1] // min(num1, num2)
+for i in range(n-1):
+    num1 = mmc
+    num2 = numbers[i+1]
 
-if n > 2:
-    for i in range(n-2):
-        num1 = mmc
-        num2 = numbers[i+2]
-
-        while num1 % num2 != 0 and num2 % num1 != 0:
-            c = num1 % num2
-            num1 = num2
-            num2 = c
-        
-        mmc = mmc * numbers[i+2] // min(num1, num2)
+    while num1 % num2 != 0 and num2 % num1 != 0:
+        c = num1 % num2
+        num1 = num2
+        num2 = c
+    
+    mmc = mmc * numbers[i+1] // min(num1, num2)
 
 #----  | last step by finding the number       
 #      V                                      
