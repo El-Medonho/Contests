@@ -42,8 +42,6 @@ int main(){
         visited[current.second].first = true;
     }
 
-    cout << "penis\n";
-
     while(pqhalf.top().second != n-1){      //second dijkstra
         pair<ll, int> current = pqhalf.top();
         pqhalf.pop();
