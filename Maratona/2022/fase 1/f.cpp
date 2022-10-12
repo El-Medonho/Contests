@@ -10,6 +10,8 @@ int main(){
 
     vector<string> words;
     vector<int> change;
+    unordered_map<string, int> freq;
+    freq.reserve(10000);
     words.resize(n);
     change.resize(n);
 
@@ -22,28 +24,25 @@ int main(){
     }
 
     for (int i = 0; i < 26; i++){
-        char currchar = char(i - 'a');
-        unordered_map<string, int> freq;
-        freq.reserve(10000);
+        char currchar = char(i + 'a');
 
         for(int j = 0; j < n; j++){
             string newword = words[j];
-            newword.replace(change[j], 1, to_string(currchar));
+            newword.replace(change[j], 1, string(1, currchar));
             freq[newword] += 1;
             if (freq[newword] > record){
                 record = freq[newword];
                 word = newword;
             }
             else if (freq[newword] == record){
-                for (char l : newword){
-                    for (char m : word){
-                        if (l < m) word = newword;
-                    }
+                for (int l = 0; l < c; l++){
+                    if (newword[l] < word[l]) word = newword;
+                    else if (newword[l] > word[l]) break;
                 }
             }
         }
     }
 
-    cout << record << " " << word << "\n";
+    cout << word << " " << record << "\n";
     return 0;
 }
