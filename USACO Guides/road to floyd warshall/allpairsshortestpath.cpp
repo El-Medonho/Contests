@@ -35,7 +35,7 @@ int main() {
             int a = min(0,edges[i][i]);
             // if (a<0) cycle[i][i];
             if (a<0) edges[i][i] = -30000000;
-            edges[i][i] = a;
+            else edges[i][i] = a;
         }
 
         // for(int i = 0; i<n; i++) edges[i][i] = 0;

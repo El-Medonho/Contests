@@ -14,7 +14,7 @@ def mult_matriz(A,B):
         for j in range(len(B[0])):
             sum = 0
             for k in range(len(A[0])):
-                sum += mod(A[i][k] * B[k][j])
+                sum += mod(mod(A[i][k]) * mod(B[k][j]))
             C[i].append(mod(sum))
     return C
 
@@ -29,10 +29,10 @@ while True:
 
     inp = list(map(int,input().split()))
 
-    quarto = reduce(lambda x,y: x+y, inp) + inp[3]
-    A = [[1,1,1],[1,0,0],[0,1,0]]
-    base = [[quarto], [inp[2]], [inp[1]]]
-    U = [[1,0,0],[0,1,0],[0,0,1]]
+    quarto = reduce(lambda x,y: x+y, inp)
+    A = [[1,1,1,1],[1,0,0,0],[0,1,0,0],[0,0,1,0]]
+    base = [[quarto], [inp[3]], [inp[2]], [inp[1]]]
+    U = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
 
 
     digits = []
@@ -44,12 +44,12 @@ while True:
     for i in digits:
         if i == 1:
             U = mult_matriz(U,A)
-            for j in range(9): U[j//3][j%3] = mod(U[j//3][j%3])
+            # for j in range(9): U[j//3][j%3] = mod(U[j//3][j%3])
         A = mult_matriz(A,A)
-        for j in range(9): A[j//3][j%3] = mod(A[j//3][j%3])
+        # for j in range(9): A[j//3][j%3] = mod(A[j//3][j%3])
 
     U = mult_matriz(U,base)
-    ans.append(mod(U[0][0]))
+    ans.append((U[0][0]))
     # ans.append(int(U[0][0]))
 
 for i in range(len(ans)): print(ans[i])
