@@ -16,10 +16,16 @@ using namespace std;
 #define INFL 0x3f3f3f3f3f3f3f3f
 #define fastio ios_base::sync_with_stdio(false), cin.tie(nullptr)
 typedef long long ll;
-typedef unsigned long long ull;
 
 int main(){
     fastio;
+    int t; cin >> t;
+    while(t--){
+        string s; cin >> s;
+        if(s == "c" || s == "o" || s == "d"|| s == "e"|| s == "f"|| s == "r"|| s == "s") cout << "YES" << endl;
+        else cout << "NO" << endl;
+    }
+
 
     return 0;
 }

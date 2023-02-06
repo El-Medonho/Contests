@@ -16,10 +16,25 @@ using namespace std;
 #define INFL 0x3f3f3f3f3f3f3f3f
 #define fastio ios_base::sync_with_stdio(false), cin.tie(nullptr)
 typedef long long ll;
-typedef unsigned long long ull;
 
 int main(){
     fastio;
+
+    int t; cin >> t;
+    while(t--){
+        int n; cin >> n;
+        string s; cin >> s;
+        pii point = {0,0};
+        string ans = "NO";
+        for(char x : s){
+            if(x == 'U') point.s++;
+            if(x == 'D') point.s--;
+            if(x == 'L') point.f--;
+            if(x == 'R') point.f++;
+            if(point.f == 1 && point.s == 1) {ans = "Yes"; break;}
+        }
+        cout << ans << endl;
+    }
 
     return 0;
 }

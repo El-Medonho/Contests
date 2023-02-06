@@ -16,7 +16,6 @@ using namespace std;
 #define INFL 0x3f3f3f3f3f3f3f3f
 #define fastio ios_base::sync_with_stdio(false), cin.tie(nullptr)
 typedef long long ll;
-typedef unsigned long long ull;
 
 int main(){
     fastio;

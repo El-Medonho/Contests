@@ -16,10 +16,28 @@ using namespace std;
 #define INFL 0x3f3f3f3f3f3f3f3f
 #define fastio ios_base::sync_with_stdio(false), cin.tie(nullptr)
 typedef long long ll;
-typedef unsigned long long ull;
 
 int main(){
     fastio;
+
+    int t; cin >> t;
+    while(t--){
+        int n,c; cin >> n >> c;
+        vii arr(n,0);
+        for(int i = 0; i < n ; i++){
+            cin >> arr[i];
+            arr[i]+=i+1;
+        }
+        sort(arr.begin(), arr.end());
+        int cnt = 0;
+        int ans = 0;
+        while(c > 0 && cnt < n){
+            c -= arr[cnt++];
+            ans++;
+        }
+        if(c < 0) ans--;
+        cout << ans << endl;
+    }
 
     return 0;
 }
