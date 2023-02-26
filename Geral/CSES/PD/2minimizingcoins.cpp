@@ -2,37 +2,48 @@
 using namespace std;
 
 #define MOD 1000000009
-#define mod(x,m) (((x%m)+m)%m)
+#define mod(x,mvvm) (((x%mvvm)+mvvm)%mvvm)
 #define f first
 #define s second
+#define pb push_back
+#define pii pair<int,int>
+#define pll pair<long long,long long>
+#define vii vector<int>
+#define vll vector<long long>
 #define endl "\n"
+#define esp " "
 #define INF 0x3f3f3f3f
 #define INFL 0x3f3f3f3f3f3f3f3f
 #define fastio ios_base::sync_with_stdio(false), cin.tie(nullptr)
 typedef long long ll;
-
-int n,x; vector<int> best; vector<int> coins; bool possible;
-
-int cover(int casa){
-    if (casa > x) return INF;
-    if (casa == x) {possible = true; return 1;}
-    if (best[casa] != 0) return best[casa];
-    int sum = INF;
-    for(int i = 0; i < n; i++) sum = min(sum,cover(casa+coins[i]));
-    best[casa] = sum+1;
-    if (casa == 0) return sum;
-    return sum+1;
-}
+typedef unsigned long long ull;
 
 int main(){
     fastio;
-    cin >> n >> x;
-    best.resize(x,0);
-    coins.resize(n,0);
-    possible = false;
-    for(int i = 0; i < n; i++) cin >> coins[i];
-    int nb = cover(0);
-    if (possible == true) cout << nb << endl;
-    else cout << -1 << endl;
+
+    int n, target; cin >> n >> target;
+
+    vii coins(n);
+    for(int &x: coins) cin >> x;
+
+    vll pd(target+1,INF);
+
+    for(int i: coins) if(i <= target) pd[i] = 1;
+    pd[0] = 0;
+
+    for(int i = 1; i <= target; i++){
+        for(int j:coins){
+            if(i-j < 0 || pd[i-j] == INF) continue;
+            pd[i] = min(pd[i], pd[i-j]+1);
+        }
+    }
+
+    if(pd[target] == INF){
+        cout << -1 << endl;
+        return 0;
+    }
+
+    cout << pd[target] << endl;
+
     return 0;
 }

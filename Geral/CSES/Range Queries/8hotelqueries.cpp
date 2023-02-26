@@ -1,0 +1,90 @@
+#include "bits/stdc++.h"
+using namespace std;
+
+#define MOD 1000000009
+#define mod(x,mvvm) (((x%mvvm)+mvvm)%mvvm)
+#define f first
+#define s second
+#define pb push_back
+#define pii pair<int,int>
+#define pll pair<long long,long long>
+#define vii vector<int>
+#define vll vector<long long>
+#define endl "\n"
+#define esp " "
+#define INF 0x3f3f3f3f
+#define INFL 0x3f3f3f3f3f3f3f3f
+#define fastio ios_base::sync_with_stdio(false), cin.tie(nullptr)
+typedef long long ll;
+typedef unsigned long long ull;
+
+vll tree(0); vll arr(0);
+int n,m; 
+
+void build(int node, int l, int r){
+    if(l == r){
+        tree[node] = arr[l];
+        return;
+    }
+    int mid = (l+r)>>1;
+    build(2*node, l, mid);
+    build(2*node+1, mid+1, r);
+    tree[node] = max(tree[2*node], tree[2*node+1]);     //change op
+}
+
+void initialize(){
+    int iterador = 1;
+    while(iterador < arr.size()) iterador *= 2;
+    iterador*=2;
+    tree.resize(iterador-1, 0);     //value of every node should be neutral value of op when itilializing
+    build(1, 0, arr.size() - 1);
+}
+
+void upd(int node, int l, int r, int id, int val){
+    if(l == r){
+        tree[node] = val;
+        arr[l] = val;
+        return;
+    }
+    int mid = (l+r)>>1;
+    if(l <= id && id <= mid){
+        upd(2*node, l, mid, id, val);
+    } else{
+        upd(2*node+1, mid+1, r, id, val);
+    }
+    tree[node] = max(tree[2*node], tree[2*node+1]); //change op
+}
+
+ll query(int node, int l, int r, int a, int b){     //call it like query(1, 0, arr.size()-1, a, b)
+    if(b < l || a > r) return 0;        //return neutral value of op
+    if(l >= a && r <= b) return tree[node];
+    int mid = (l+r)>>1;
+    return max(query(2*node, l , mid, a, b), query(2*node+1, mid+1, r, a, b));  //change op
+}
+
+ll room(int node, int l, int r, int k){
+    if(node == 1 && tree[node] < k) return 0;
+    if(l == r) {upd(1, 0, n-1, l, tree[node] - k);return l+1;}
+    int mid = (l+r)>>1;
+    if(tree[node*2] >= k) {return room(node*2, l, mid, k);}
+    else return room(2*node+1, mid+1, r, k);
+}
+
+int main(){
+    fastio;
+
+    cin >> n >> m;
+    arr.resize(n);
+    for(ll &j: arr) cin >> j;
+
+    initialize();
+
+    while(m--){
+        int k; cin >> k;
+        ll h = room(1, 0, n-1, k);
+        cout << h << esp;
+    }
+    cout << endl;
+
+    return 0;
+}

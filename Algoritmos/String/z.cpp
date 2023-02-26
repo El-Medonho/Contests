@@ -1,5 +1,5 @@
-//z é um vector de int que relaciona cada posição da string com um número que indica o ta
-//manho da substring que começa nessa posição e coincide com o prefixo da string
+//z é um vector de int que relaciona cada posição da string com um número que indica o
+//tamanho da substring que começa nessa posição e coincide com o prefixo da string
 vector<int> z_function(string s) {          
     int n = (int) s.length();
     vector<int> z(n);
