@@ -51,18 +51,18 @@ int main(){
 
     if(k%2 == 1){
         while(pnt2 != n){
-        currnums.erase(currnums.upper_bound(arr[pnt1]));
-        ll aa = abs(arr[pnt1]-currmedian);
-        
-        pnt1++;
- 
-        currnums.insert(arr[pnt2]);
-        currmedian = *currnums.find_by_order(rate);
- 
-        cost += abs(arr[pnt2]-currmedian) - aa;
-        ans[ind] = cost; ind++;
- 
-        pnt2++;
+            currnums.erase(currnums.upper_bound(arr[pnt1]));
+            ll aa = abs(arr[pnt1]-currmedian);
+            
+            pnt1++;
+    
+            currnums.insert(arr[pnt2]);
+            currmedian = *currnums.find_by_order(rate);
+    
+            cost += abs(arr[pnt2]-currmedian) - aa;
+            ans[ind] = cost; ind++;
+    
+            pnt2++;
         }
     }
 

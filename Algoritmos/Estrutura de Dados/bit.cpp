@@ -1,14 +1,14 @@
 //fenwick tree
 // bit[x] tem que ser indexada no 1, inclusive o ind
 
-void upd(int ind, int val, vector<int> &bit){   //O(logn)
+void upd(int ind, ll val, vector<ll> &bit){   //O(logn)
     while(ind<=bit.size()-1){
         bit[ind]+=val;
         ind+=ind&-ind;
     }
 }
-int sum(int ind, vector<int> &bit){         //O(logn)
-    int ans=0;
+ll sum(int ind, vector<ll> &bit){         //O(logn)
+    ll ans=0;
     while(ind){
         ans+=bit[ind];    
         ind-=ind&-ind;    

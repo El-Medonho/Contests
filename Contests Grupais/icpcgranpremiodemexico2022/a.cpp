@@ -21,7 +21,11 @@ typedef unsigned long long ull;
 int main(){
     fastio;
 
-    
+    int n; cin >> n;
+
+    int ans = ceil(3000/double(n));
+    if(ans > 15) cout << 15 << endl;
+    else cout << ans << endl;
 
     return 0;
 }

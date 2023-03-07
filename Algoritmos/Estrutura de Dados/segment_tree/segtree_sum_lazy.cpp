@@ -1,4 +1,4 @@
-vll tree(0); vll arr(0);
+vll tree(0); vll arr(0); vll lazy(0);
 
 void unlazy(int node, int l, int r){
     if(lazy[node]){
@@ -27,6 +27,7 @@ void initialize(){
     while(iterador < arr.size()) iterador *= 2;
     iterador*=2;
     tree.resize(iterador, 0);     //value of every node should be neutral value of op when itilializing
+    lazy.resize(iterador, 0);
     build(1, 0, arr.size() - 1);
 }
 
@@ -52,4 +53,17 @@ int query(int node, int l, int r, int a, int b){
     }
     int mid=(l+r)>>1;
     return query(2*node, l, mid, a, b) + query(2*node+1, mid+1, r, a, b);   // change op
+}
+
+int consult(int node, int l, int r, int id){
+    unlazy(node,l,r);
+    if(l == r){
+        return tree[node];
+    }
+    int mid=(l+r)>>1;
+    if(l<=id && mid>=id){
+        return consult(2*node,l,mid,id);
+    }else{
+        return consult(2*node+1, mid+1, r, id);
+    }
 }

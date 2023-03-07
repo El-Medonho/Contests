@@ -1,0 +1,180 @@
+#include "bits/stdc++.h"
+using namespace std;
+
+#define MOD 1000000009
+#define mod(x,mvvm) (((x%mvvm)+mvvm)%mvvm)
+#define f first
+#define s second
+#define pb push_back
+#define pii pair<int,int>
+#define pll pair<long long,long long>
+#define vii vector<int>
+#define vll vector<long long>
+#define endl "\n"
+#define esp " "
+#define INF 0x3f3f3f3f
+#define INFL 0x3f3f3f3f3f3f3f3f
+#define fastio ios_base::sync_with_stdio(false), cin.tie(nullptr)
+typedef long long ll;
+typedef unsigned long long ull;
+
+int n;
+vector<vii> graph(0), up(0);
+vii parent(0), depth(0), weight(0);
+vll value(0);
+
+vll tree(0); vll arr(0);
+int sti = 0;
+
+void initialize(){
+    int iterador = 1;
+    while(iterador < arr.size()) iterador *= 2;
+    sti = iterador;
+    iterador*=2;
+    tree.resize(iterador, -INFL);     //value of every node should be neutral value of op when itilializing
+}
+
+void upd2(int id, ll val){
+    id += sti;
+    tree[id] = val;
+    for(int i = id/2; i > 0; i/=2) tree[i] = max(tree[2*i], tree[2*i+1]);
+}
+
+ll query(int node, int l, int r, int a, int b){     //call it like query(1, 0, sti-1, a, b)
+    if(b < l || a > r) return -INFL;        //return neutral value of op
+    if(l >= a && r <= b) return tree[node];
+    int mid = (l+r)>>1;
+    return max(query(2*node, l , mid, a, b), query(2*node+1, mid+1, r, a, b));  //change op
+}
+
+ll query2(int lo, int hi) {
+	ll ra = 0, rb = 0;
+	for (lo += sti, hi += sti + 1; lo < hi; lo /= 2, hi /= 2) {
+		if (lo & 1) ra = max(ra, tree[lo++]);
+		if (hi & 1) rb = max(rb, tree[--hi]);
+	}
+	return max(ra, rb);
+}
+
+int dfs(int curr, int last){
+    weight[curr] = 1;
+    
+    for(int j: graph[curr]){
+        if(last == j) continue;
+        depth[j] = depth[curr]+1;
+        parent[j] = curr;
+        weight[curr] += dfs(j,curr);
+    }
+    return weight[curr];
+}
+
+void dfscall(){
+
+    depth.resize(n,0);
+    parent.resize(n,0);
+    weight.resize(n,0);
+    dfs(0,-1);
+
+    return;
+}
+
+vii ind(0),tp(0);
+int tempo = 0;
+
+void hld(int curr, int last, int top){
+    arr[tempo] = value[curr];
+    upd(tempo, value[curr]);
+    ind[curr] = tempo++;
+    tp[curr] = top;
+
+    int wt_id = -1, wt_val = -1;
+
+    for(int j: graph[curr]){
+        if(j == last) continue;
+        if(weight[j] > wt_val){
+            wt_val = weight[j];
+            wt_id = j;
+        }
+    }
+
+    if(wt_id == -1) return;
+
+    hld(wt_id, curr, top);
+    
+    for(int j: graph[curr]){
+        if(j == last || j == wt_id) continue;
+        hld(j,curr,j);
+    }
+}
+
+void hldcall(){
+    ind.resize(n); tp.resize(n);
+    hld(0,-1,0);
+}
+
+ll path(int a, int b){
+    ll ans = -INFL;
+    while(tp[a] != tp[b]){
+        if(depth[tp[a]] < depth[tp[b]]) swap(a,b);
+        ans = max(ans, query(ind[tp[a]],ind[a]));
+        a = tp[a];
+        a = parent[a];
+    }
+
+    if(depth[a] < depth[b]) swap(a,b);
+    ans = max(ans, query(ind[b],ind[a]));
+
+    return ans;
+}
+
+int main(){
+    fastio;
+
+    int q; cin >> n >> q;
+
+    value.resize(n,0);
+    for(ll &i: value) cin >> i;
+
+    graph.resize(n);
+    for(int i = 0; i < n-1; i++){
+        int a,b; cin >> a >> b; a--; b--;
+        graph[a].pb(b);
+        graph[b].pb(a);
+    }
+
+    dfscall();
+
+    arr.resize(n);
+    initialize();
+
+    hldcall();
+
+    initialize();
+
+    while(q--){
+        int op; cin >> op;
+        if(op == 1){
+            ll i,x; cin >> i >> x; i--;
+            upd2(ind[i], x);
+        }else{
+            int a,b; cin >> a >> b; a--; b--;
+            
+            ll ans = -INFL;
+            while(tp[a] != tp[b]){
+                if(depth[tp[a]] < depth[tp[b]]) swap(a,b);
+                ans = max(ans, query2(ind[tp[a]],ind[a]));
+                a = tp[a];
+                a = parent[a];
+            }
+
+            if(depth[a] < depth[b]) swap(a,b);
+            ans = max(ans, query2(ind[b],ind[a]));
+
+            cout << ans << esp;
+        }
+    }
+
+    cout << endl;
+
+    return 0;
+}
