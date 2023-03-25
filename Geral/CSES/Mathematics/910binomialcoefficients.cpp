@@ -1,0 +1,54 @@
+#include "bits/stdc++.h"
+using namespace std;
+
+#define MOD 1000000007
+#define mod(x,mvvm) (((x%mvvm)+mvvm)%mvvm)
+#define f first
+#define s second
+#define pb push_back
+#define pii pair<int,int>
+#define pll pair<long long,long long>
+#define vii vector<int>
+#define vll vector<long long>
+#define endl "\n"
+#define esp " "
+#define INF 0x3f3f3f3f
+#define INFL 0x3f3f3f3f3f3f3f3f
+#define fastio ios_base::sync_with_stdio(false), cin.tie(nullptr)
+typedef long long ll;
+typedef unsigned long long ull;
+
+ll expo(ll b, ll e, ll m){
+    ll res=1;
+    while(e){
+        if(e&1) res=mod(res*b, m);
+        res = mod(res,m);
+        b=mod(b*b,m);
+        b = mod(b,m);
+        e >>= 1;
+    }
+    return res;
+}
+
+int main(){
+    fastio;
+
+    vll facts(1e6 + 50, 1);
+
+    for(ll i = 1; i < 1e6 + 4; i++) facts[i] = mod(facts[i-1] * i, MOD);
+
+    int n; cin >> n;
+
+    while(n--){
+        ll a,b; cin >> a >> b;
+
+        ll ans = facts[a];
+        ll h = mod(facts[b]*facts[a-b], MOD);
+        h = expo(h, MOD-2, MOD);
+        ans = mod(ans * h, MOD);
+
+        cout << ans << endl;
+    }
+
+    return 0;
+}

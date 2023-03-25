@@ -1,7 +1,9 @@
+//MEDONHO APENAS
+
 #include "bits/stdc++.h"
 using namespace std;
 
-#define MOD 1000000009
+#define MOD 1000000007
 #define mod(x,mvvm) (((x%mvvm)+mvvm)%mvvm)
 #define f first
 #define s second
