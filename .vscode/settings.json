@@ -12,6 +12,7 @@
         "random": "cpp",
         "iostream": "cpp",
         "chrono": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "tuple": "cpp"
     }
 }
