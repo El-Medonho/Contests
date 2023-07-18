@@ -2,46 +2,47 @@
 using namespace std;
 
 #define MOD 1000000009
-#define mod(x,m) (((x%m)+m)%m)
-#define fastio ios_base::sync_with_stdio(false), cin.tie(nullptr)
 typedef long long ll;
 
 
+void mod_sum(ll& a, ll b, ll M) {
+    a += b;
+    if (a >= M) a -= M;
+}
+
 // função para multiplicar matrizes (MOD opcional) (uso de ll é possível)
-vector<vector<ll>> mult_matriz(vector<vector<ll>> a, vector<vector<ll>> b){    //possivel usar "&"
+vector<vector<ll>> mult_matriz(vector<vector<ll>> &a, vector<vector<ll>> &b){    //possivel usar "&"
     vector<vector<ll>> z(a.size(), vector<ll>(b[0].size()));
     for(int i = 0; i < a.size(); i++){
         for(int j = 0; j < b[0].size(); j++){
             ll sum = 0;
             for(int k = 0; k < a[0].size(); k++){
-                sum += mod(a[i][k]*b[k][j],MOD);
-                sum=mod(sum,MOD);
+                mod_sum(sum, a[i][k]*b[k][j]%MOD, MOD);
             }
-            z[i][j] = (mod(sum,MOD));
+            z[i][j] = sum;
         }
     }
     return z;
 }
 
 
-vector<vector<ll>> recorrencia_matriz(ll expo, vector<vector<ll>> base, vector<vector<ll>> A){
+vector<vector<ll>> recorrencia_matriz(ll expo, vector<vector<ll>> &base, vector<vector<ll>> &A){
     //exponenciação de matriz (dim 3 no exemplo)
     //id - matriz identidade; A - matriz de recorrência; base - vetor base; expo - expoente da matriz
     //base = {{1},{1},{1}}; - formato da base
     //retorna o vetor resultante
     vector<ll> digits(0);
+    int n = A.size();
 
-    while(expo>1){
-        digits.push_back(expo%2); expo/=2;
-    }
-    digits.push_back(expo);
+    vector<vector<ll>> id(n, vector<ll> (n,0));
+    for(int i = 0; i < n; i++) id[i][i] = 1;
 
-    vector<vector<ll>> id = {{1,0,0},{0,1,0},{0,0,1}};
-    for(auto x: digits){
-        if(x == 1){
+    while(expo){
+        if(expo&1){
             id = mult_matriz(id,A);
         }
         A = mult_matriz(A,A);
+        expo>>=1;
     }
     id = mult_matriz(id,base);
 

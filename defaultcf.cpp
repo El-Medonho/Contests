@@ -34,13 +34,15 @@ typedef long double ld;
 typedef tree<int,null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
 typedef tree<int,null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> multiordered_set;  //--set.lower_bound(value) ao inves de find
 
-int solve(){
+mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
+
+signed solve(){
 
 
     return 0;
 }
 
-int main(){
+signed main(){
     fastio;
 
     int t = 1;

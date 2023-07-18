@@ -90,7 +90,9 @@ int solve(){
             }
         }
 
-        ans += curr;
+        if(curr != 0){
+            
+        }
     }
 
     cout << ans << endl;

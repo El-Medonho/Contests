@@ -38,12 +38,6 @@ int main(){
     machine.resize(n);
     for(int i = 0; i < n; i++) cin >> machine[i];
 
-    // ll l = 0, r = 1;
-    // while(!calc(r)){
-    //     l = r;
-    //     r *= 2;
-    // }
-
     ll l = 0, r = 1e18;
 
     while(r > l){

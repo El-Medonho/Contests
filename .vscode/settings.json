@@ -13,6 +13,8 @@
         "iostream": "cpp",
         "chrono": "cpp",
         "complex": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "cmath": "cpp",
+        "valarray": "cpp"
     }
 }

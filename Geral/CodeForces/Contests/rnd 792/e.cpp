@@ -63,15 +63,28 @@ int solve(){
 
     for(int i = 0; i < n; i++){
         if(st.find(i) != st.end() && i < diff){
-            if(mp[i] > 1) unique++;
+            if(mp[i] == 1) unique--;
+            if(unique<0) {diff++; unique=0;}
             sum++;
         }else{
             ans = min(ans, diff-i);
             if(op == k) break;
             sum++;
-            if(i < unique) {op++; continue;}
+            if(unique) {op++; unique--; continue;}
             else {op++; diff++; continue;}
         }
+    }
+
+    set<int> hh;
+    for(auto it: mp){
+        if(it.first > sum){
+            hh.insert(it.second);
+        }
+    }
+
+    int hj = diff-st.size();
+    for(int x: hh){
+        if(hj >= x && x >= 2) {diff--; hj-=x;}
     }
 
     ans = min(ans, diff-sum);
