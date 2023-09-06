@@ -21,21 +21,6 @@ void dfscall(){
     return;
 }
 
-// void bfs(){    //useful if you already have the parents
-//     depth.resize(n,0);
-//     queue<int> qw;
-//     qw.push(0);
-
-//     while(!qw.empty()){
-//         int curr = qw.front(); qw.pop();
-//         for(int j: graph[curr]){
-//             qw.push(j);
-//             depth[j] = depth[curr]+1;
-//         }
-//     }
-//     return;
-// }
-
 void bl(){
     up.resize(n, vii(32,0));
     for(int i = 0; i < n; i++){
