@@ -36,11 +36,49 @@ typedef tree<int,null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
+void upd(int ind, ll val, vector<int> &bit){   //O(logn)
+    while(ind<=bit.size()-1){
+        bit[ind]+=val;
+        ind+=ind&-ind;
+    }
+}
+ll sum(int ind, vector<int> &bit){         //O(logn)
+    ll ans=0;
+    while(ind){
+        ans+=bit[ind];    
+        ind-=ind&-ind;    
+    }
+    return ans;
+}
+
 signed solve(){
 
-    
-    
+    int n; cin >> n; 
+    vector<int> arr(n);
+    ll ans = 0;
 
+    for(int &i: arr) cin >> i;
+
+    map<int,int> mp, save;
+    for(int i: arr) {mp[i]++;}
+
+    vector<int> bit(n+1,0);
+
+    for(int i = 0; i < n; i++){
+        if(!save[arr[i]]){
+            upd(i+1, 1, bit);
+            ans += n - i;
+        }
+        save[arr[i]]++;
+
+        mp[arr[i]]--;
+        if(mp[arr[i]]){
+            ans -= sum(i+1, bit);
+        }
+    }
+
+    cout << ans << endl;
+    
     return 0;
 }
 

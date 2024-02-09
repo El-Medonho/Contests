@@ -1,63 +1,43 @@
-int n;
-vector<vii> graph(0), up(0);
-vii parent(0), depth(0);
+#include "bits/stdc++.h"
 
-void dfs(int curr, int last){
-    for(int j: graph[curr]){
-        if(last == j) continue;
-        depth[j] = depth[curr]+1;
-        parent[j] = curr;
-        dfs(j,curr);
-    }
-    return;
-}
+using namespace std;
 
-void dfscall(){
+template<typename T, typename Cmp=less<T>>
+struct rmq_t : private Cmp {
+	int N = 0;
+	vector<vector<T>> table; 
+	const T& min(const T& a, const T& b) const { return Cmp::operator()(a, b) ? a : b; }
+	rmq_t() {}
+	rmq_t(const vector<T>& values) : N(int(values.size())), table(__lg(N) + 1) {
+		table[0] = values;
+		for (int a = 1; a < int(table.size()); ++a) {
+			table[a].resize(N - (1 << a) + 1);
+			for (int b = 0; b + (1 << a) <= N; ++b) 
+				table[a][b] = min(table[a-1][b], table[a-1][b + (1 << (a-1))]); 
+		}
+	}
+	T query(int a, int b) const { 
+		int lg = __lg(b - a);
+		return min(table[lg][a], table[lg][b - (1 << lg) ]);
+	}
+};
 
-    depth.resize(n,0);
-    parent.resize(n,0);
-    dfs(0,-1);
-
-    return;
-}
-
-void bl(){
-    up.resize(n, vii(32,0));
-    for(int i = 0; i < n; i++){
-        up[i][0] = parent[i];
-    }
-
-    for(int j = 1; j < 20; j++){
-        for(int i = 0; i < n; i++){
-            up[i][j] = up[up[i][j-1]][j-1];
-        }
-    }
-    return;
-}
-
-int lca(int a, int b){
-    if(depth[a] > depth[b]) swap(a,b);
-    int k = depth[b] - depth[a];
-
-    for(int i = 19; i > -1; i--){
-        if(k & (1<<i)){
-            b = up[b][i];
-        }
-    }
-
-    if(a == b){
-        return a;
-    }
-
-    pii last = {a,b}; int matching = INF;
-    for(int i = 19; i > -1; i--){
-        a = up[a][i]; b = up[b][i];
-        if(a == b){
-            matching = a;
-            a = last.f; b = last.s;
-        }else{
-            last = {a,b};
-        }
-    }
-    return matching;
-}
+struct lca_t {
+	int T = 0;
+	vector<int> time, path, walk;
+	rmq_t<int> rmq;
+	lca_t(vector<vector<int>> &edges) : time(int(edges.size())), 
+	rmq((dfs(edges,0,-1), walk)) {}
+	void dfs(vector<vector<int>> &edges, int v, int p) {
+		time[v] = T++;
+		for(int u : edges[v]) if (u != p) {
+			path.push_back(v), walk.push_back(time[v]);
+			dfs(edges, u, v);
+		}
+	}
+	int lca(int a, int b) {
+		if (a == b) return a;
+		tie(a, b) = minmax(time[a], time[b]);
+		return path[rmq.query(a, b)];
+	}
+};

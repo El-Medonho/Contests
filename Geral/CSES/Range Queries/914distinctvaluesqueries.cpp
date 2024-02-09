@@ -1,94 +1,129 @@
+// ⢸⣿⣿⣿⣿⠃⠄⢀⣴⡾⠃⠄⠄⠄⠄⠄⠈⠺⠟⠛⠛⠛⠛⠻⢿⣿⣿⣿⣿⣶⣤⡀⠄
+// ⢸⣿⣿⣿⡟⢀⣴⣿⡿⠁⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣸⣿⣿⣿⣿⣿⣿⣿⣷
+// ⢸⣿⣿⠟⣴⣿⡿⡟⡼⢹⣷⢲⡶⣖⣾⣶⢄⠄⠄⠄⠄⠄⢀⣼⣿⢿⣿⣿⣿⣿⣿⣿⣿
+// ⢸⣿⢫⣾⣿⡟⣾⡸⢠⡿⢳⡿⠍⣼⣿⢏⣿⣷⢄⡀⠄⢠⣾⢻⣿⣸⣿⣿⣿⣿⣿⣿⣿
+// ⡿⣡⣿⣿⡟⡼⡁⠁⣰⠂⡾⠉⢨⣿⠃⣿⡿⠍⣾⣟⢤⣿⢇⣿⢇⣿⣿⢿⣿⣿⣿⣿⣿
+// ⣱⣿⣿⡟⡐⣰⣧⡷⣿⣴⣧⣤⣼⣯⢸⡿⠁⣰⠟⢀⣼⠏⣲⠏⢸⣿⡟⣿⣿⣿⣿⣿⣿
+// ⣿⣿⡟⠁⠄⠟⣁⠄⢡⣿⣿⣿⣿⣿⣿⣦⣼⢟⢀⡼⠃⡹⠃⡀⢸⡿⢸⣿⣿⣿⣿⣿⡟
+// ⣿⣿⠃⠄⢀⣾⠋⠓⢰⣿⣿⣿⣿⣿⣿⠿⣿⣿⣾⣅⢔⣕⡇⡇⡼⢁⣿⣿⣿⣿⣿⣿⢣
+// ⣿⡟⠄⠄⣾⣇⠷⣢⣿⣿⣿⣿⣿⣿⣿⣭⣀⡈⠙⢿⣿⣿⡇⡧⢁⣾⣿⣿⣿⣿⣿⢏⣾
+// ⣿⡇⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⢻⠇⠄⠄⢿⣿⡇⢡⣾⣿⣿⣿⣿⣿⣏⣼⣿
+// ⣿⣷⢰⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⢰⣧⣀⡄⢀⠘⡿⣰⣿⣿⣿⣿⣿⣿⠟⣼⣿⣿
+// ⢹⣿⢸⣿⣿⠟⠻⢿⣿⣿⣿⣿⣿⣿⣿⣶⣭⣉⣤⣿⢈⣼⣿⣿⣿⣿⣿⣿⠏⣾⣹⣿⣿
+// ⢸⠇⡜⣿⡟⠄⠄⠄⠈⠙⣿⣿⣿⣿⣿⣿⣿⣿⠟⣱⣻⣿⣿⣿⣿⣿⠟⠁⢳⠃⣿⣿⣿
+// ⠄⣰⡗⠹⣿⣄⠄⠄⠄⢀⣿⣿⣿⣿⣿⣿⠟⣅⣥⣿⣿⣿⣿⠿⠋⠄⠄⣾⡌⢠⣿⡿⠃
+// ⠜⠋⢠⣷⢻⣿⣿⣶⣾⣿⣿⣿⣿⠿⣛⣥⣾⣿⠿⠟⠛⠉⠄⠄
+
+
 #include "bits/stdc++.h"
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/pb_ds/assoc_container.hpp>
+
+using namespace __gnu_pbds;
 using namespace std;
 
-#define MOD 1000000009
-#define mod(x,mvvm) (((x%mvvm)+mvvm)%mvvm)
-#define f first
-#define s second
-#define pb push_back
-#define pii pair<int,int>
-#define pll pair<long long,long long>
-#define vii vector<int>
-#define vll vector<long long>
 #define endl "\n"
-#define esp " "
 #define INF 0x3f3f3f3f
 #define INFL 0x3f3f3f3f3f3f3f3f
 #define fastio ios_base::sync_with_stdio(false), cin.tie(nullptr)
 typedef long long ll;
 typedef unsigned long long ull;
+typedef long double ld;
+typedef tree<int,null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
+typedef tree<int,null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> multiordered_set;  //--set.lower_bound(value) ao inves de find
 
-vector<map<int,int>> tree(0); vll arr(0);
-map<int,int> ans;
+mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
-void build(int node, int l, int r){
-    if(l == r){
-        tree[node][arr[l]]++;
-        return;
-    }
-    int mid = (l+r)>>1;
-    build(2*node, l, mid);
-    build(2*node+1, mid+1, r);
-    for(int x: tree[2*node]){
-        tree[node][x] += tree[2*node][x];
-    }
-    
-    for(int x: tree[2*node+1]){
-        tree[node][x] += tree[2*node+1][x];
-    }
-}
 
-void initialize(){
-    int iterador = 1;
-    while(iterador < arr.size()) iterador *= 2;
-    iterador*=2;
-    tree.resize(iterador);     //value of every node should be neutral value of op when itilializing
-    build(1, 0, arr.size() - 1);
-}
+set<int> ans;
 
-void upd(int node, int l, int r, int id, int val){
-    if(l == r){
-        tree[node].erase(arr[l]);
-        tree[node][val]++;
-        arr[l] = val;
-        return;
+struct Seg{
+    int n, m;
+    vector<set<int>> tree;
+
+    set<int> join(const set<int> &a, const set<int> &b){
+        set<int> base;
+
+        for(int i: a) base.insert(i);
+        for(int i: b) base.insert(i);
+
+
+        return base;
     }
 
-    tree[node][arr[l]]--;
-    if(tree[node][arr[l]] == 0) tree[node].erase(arr[l]);
-    tree[node][val]++;
+    Seg(int n, vector<int> &arr) : n(n) {
+        m = 1;
+        while(m < n) m<<=1;
 
-    int mid = (l+r)>>1;
-    if(l <= id && id <= mid){
-        upd(2*node, l, mid, id, val);
-    } else{
-        upd(2*node+1, mid+1, r, id, val);
+        tree.resize(2*m);
+
+        for(int i = m; i < n+m; i++) tree[i].insert(arr[i-m]);
+
+        for(int i = m-1; i > 0; i--) tree[i] = join(tree[2*i], tree[2*i+1]);
     }
-}
 
-ll query(int node, int l, int r, int a, int b){     //call it like query(1, 0, arr.size()-1, a, b)
-    if(b < l || a > r) return 0;        //return neutral value of op
-    if(l >= a && r <= b) {
-        for(int x: tree[node]){
-            ans[x]++;
-            return 0;
+    void upd(int pos, int val, int node, int l, int r){
+        if(l > pos || r < pos) return;
+        if(l == r){
+            tree[node].clear();
+            tree[node].insert(val);
+            return;
         }
+        int mid = (l+r)/2;
+        if(mid >= pos) upd(pos, val, node*2, l, mid);
+        else upd(pos, val, node*2+1, mid+1, r);
+        tree[node] = join(tree[2*node], tree[2*node+1]);
+        return;
     }
-    int mid = (l+r)>>1;
-    return query(2*node, l , mid, a, b) + query(2*node+1, mid+1, r, a, b);  //change op
-}
 
-int main(){
-    fastio;
+    set<int> query(int a, int b, int node, int l, int r){
+        if(a > r || b < l) return set<int>();
+        if(l >= a && r <= b) {return tree[node];}
+        
+        int mid = (l+r)/2;
+        if(a > mid || b < l) return query(a,b,2*node+1,mid+1,r);
+        else if(a > r || b < mid+1) return query(a,b,2*node,l,mid);
+        return join(query(a,b,2*node,l,mid), query(a,b,2*node+1,mid+1,r));
+    }
+
+    void upd(int pos, int val){
+        upd(pos, val, 1, 1, m);
+        return;
+    }
+};
+
+signed solve(){
 
     int n,q; cin >> n >> q;
+    vector<int> arr(n);
+    for(int i = 0; i < n; i++){
+        int x; cin >> x;
+        arr[i] = x;
+    }
+    
+    Seg seg(n, arr);
 
-    arr.resize(n);
-    for(int i = 0; i < n; i++) cin >> arr[i];
+    ans = 0;
 
     while(q--){
-        ans.clear();
+        int op, x, y; cin >> op >> x >> y;
+        
+        ans = 0;
+        set<int> cc = seg.query(x,y,1,1,seg.m);
+        cout << cc.size() << endl;
     }
+
+    return 0;
+}
+
+signed main(){
+    fastio;
+
+    int t = 1;
+    // cin >> t;
+    while(t--){
+        solve();
+    }    
 
     return 0;
 }

@@ -40,40 +40,37 @@ signed solve(){
 
     ll n; cin >> n;
 
-    vector<int> arr(n+5, 0), mark(n+5, 0);
+    vector<ll> arr(n+5, 0), dp(n+5,0);
+    vector<bool> mark(n+5, 0);
     set<int> st;
 
     ll ans = 0;
 
     for(int i = 0; i < n; i++){
         int x; cin >> x;
+        if(x == 0) continue;
         if(!arr[x]) st.insert(x);
         arr[x]++;
     }
 
-    for(int i: st){
-        int tot1 = 0;
-        int cc = 0;
-        if(mark[i]) continue;
-        for(int j = i; j <= n; j += i){
-            if(!mark[j]) tot1 += arr[j];
+    for(int cc = n; cc > 0; cc--){
+        // int cc = *it;
+        ll x = 0;
+        // if(!arr[cc]) continue;
+        for(int i = cc; i <= n; i+=cc){
+            dp[cc] -= dp[i];
+            x += arr[i];
         }
-        int tot2 = tot1;
-        for(int j = i; j <= n; j += i){
-            if(mark[j]){
-                cc += tot2;
-            }
-            else{
-                cc += tot1;
-                tot1 -= arr[j];
-                mark[j] = 1;
-            }
-        }
-
-        ans += cc;
+        x = x * (x-1) / 2;
+        dp[cc] = dp[cc] + x;
+        // ans += dp[cc];
+    }
+    
+    for(int i: st) {
+        for(int j = i; j <= n; j+=i) mark[j] = 1;
     }
 
-    ans -= n;
+    for(int i = 1; i <= n; i++) if(mark[i]) ans += dp[i];
 
     ans = (n*(n-1)/2) - ans; 
 

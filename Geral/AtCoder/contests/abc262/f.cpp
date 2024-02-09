@@ -83,7 +83,7 @@ signed solve(){
                     p = 0;
                     s.push_back(l);
                 }
-                else if(!p && k >= mp[i] - mp[l] - 1 && mp[i] > mp[l]){
+                else if(!p && k >= mp[i] - mp[l] - 1 && mp[i] > mp[l] && mp[i] - mp[l] - 1 > 0){
                     k -= mp[i] - mp[l] - 1;
                     l = i;
                     p = 0;
@@ -93,10 +93,22 @@ signed solve(){
         }
         if(p) {
             for(int i = mp[l]+1; i < n; i++) s.push_back(arr[i]);
-            for(int i = 0; i < mp[ch]; i++) s.push_back(arr[i]);
+            vector<int> mark(0);
+            for(int i = 0; i < mp[ch]; i++) {
+                while(mark.size() && arr[i] < mark.back() && k) {mark.pop_back(); k--;}
+                mark.push_back(arr[i]); 
+            }
+            for(int i: mark) s.push_back(i);
+            while(k) {s.pop_back(); k--;}
         }
         else{
-            for(int i = mp[l]+1; i < mp[ch]; i++) s.push_back(arr[i]);
+            vector<int> mark(0);
+            for(int i = mp[l]+1; i < mp[ch]; i++) {
+                while(mark.size() && arr[i] < mark.back() && k) {mark.pop_back(); k--;}
+                mark.push_back(arr[i]); 
+            }
+            for(int i: mark) s.push_back(i);
+            while(k) {s.pop_back(); k--;}
         }
     }
 
@@ -110,19 +122,28 @@ signed solve(){
         k -= mp[ch];
         // int l = ch;
         s2.push_back(l);
-        for(int i = ch+1; i < n; i++){
-            if(mp[i] > mp[l] && mp[i] - mp[l] - 1 >= k){
-                k -= mp[i] - mp[l] - 1;
-                l = i;
-                s2.push_back(l);
-            }
+        // for(int i = ch+1; i < n; i++){
+        //     int h = mp[i] - mp[l] - 1;
+        //     if(mp[i] > mp[l] && mp[i] - mp[l] - 1 <= k && h){
+        //         k -= mp[i] - mp[l] - 1;
+        //         l = i;
+        //         s2.push_back(l);
+        //     }
+        // }
+        vector<int> mark(0);
+        for(int i = mp[l]+1; i < n; i++) {
+            while(mark.size() && arr[i] < mark.back() && k) {mark.pop_back(); k--;}
+            mark.push_back(arr[i]); 
         }
-        for(int i = mp[l]+1; i < n; i++) s2.push_back(arr[i]);
+        for(int i: mark) s2.push_back(i);
+        while(k) {s2.pop_back(); k--;}
     }
 
 
     bool ok = false;
     for(int i = 0; i < max(s.size(), s2.size()); i++){
+        if(s2.size() == 0) break;
+        if(s.size() == 0) {ok = true; break;}
         if(s2.size() == 0 || i >= s.size() || s[i] < s2[i]) break;
         if(s.size() == 0 || i >= s2.size() || s[i] > s2[i]){
             ok = true;

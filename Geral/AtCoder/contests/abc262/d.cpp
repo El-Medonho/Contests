@@ -36,6 +36,8 @@ typedef tree<int,null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
+const ll md = 998244353;
+
 signed solve(){
 
     int n; cin >> n;
@@ -45,8 +47,27 @@ signed solve(){
 
     sort(arr.begin(), arr.end());
 
+    ll ans = 0;
+
+    for(int i = 1; i <= n; i++){
+        vector<vector<ll>> dp(i+1, vector<ll>(i));
+        // for(ll j: arr) dp[1][j%i]++;
+            // dp[1][j%i]++;
+        for(ll j: arr){
+            for(int u = i-1; u >= 0; u--){
+                for(int k = 0; k < i; k++){
+                    ll nk = (k + j) % i;
+                    dp[u+1][nk] = (dp[u+1][nk] + dp[u][k]) % md;
+                }
+            }
+            dp[1][j%i]++;
+        }
+        ans += dp[i][0];
+        ans %= md;
+        // cout << dp[i][0] << endl;
+    }
     
-    
+    cout << ans << endl;
 
     return 0;
 }

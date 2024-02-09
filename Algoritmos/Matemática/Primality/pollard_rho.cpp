@@ -1,6 +1,16 @@
 //Pollard-rho randomized factorization algorithm. Returns
 //prime factors of a number, in arbitrary order (e.g. 2299 -> {11, 19, 11}).
 //O(n^(1/4))
+ull modmul(ull a, ull b, ull M) {
+    ll ret = a * b - M * ull(1.L / M * a * b);
+    return ret + M * (ret < 0) - M * (ret >= (ll)M);
+}
+ull modpow(ull b, ull e, ull mod) {
+    ull ans = 1;
+    for (; e; b = modmul(b, b, mod), e /= 2)
+    if (e & 1) ans = modmul(ans, b, mod);
+    return ans;
+}
 
 ull pollard(ull n) {
     auto f = [n](ull x, ull k) { return modmul(x, x, n) + k; };
@@ -22,16 +32,6 @@ vector<ull> factor(ull n) {
     return l;
 }
 
-ull modmul(ull a, ull b, ull M) {
-    ll ret = a * b - M * ull(1.L / M * a * b);
-    return ret + M * (ret < 0) - M * (ret >= (ll)M);
-}
-ull modpow(ull b, ull e, ull mod) {
-    ull ans = 1;
-    for (; e; b = modmul(b, b, mod), e /= 2)
-    if (e & 1) ans = modmul(ans, b, mod);
-    return ans;
-}
 
 //Deterministic Miller-Rabin primality test. Guaranteed to
 // work for numbers up to 264 ; for larger numbers, extend A randomly.
