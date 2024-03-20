@@ -58,9 +58,10 @@ signed solve(){
 
     vector<ll> dp(n, 1);
 
-    vector<ll> ans(n);
+    vector<ll> ans(n,1);
 
-    function<void(int,int)> dfs, dfs2;
+    function<void(int,int)> dfs;
+    function<void(int,int,ll)> dfs2;
 
     dfs = [&](int cc, int last){
 
@@ -76,25 +77,49 @@ signed solve(){
 
     dfs(0,0);
 
-    dfs2 = [&](int cc, int last){
-        ans[cc] = dp[cc];
+    dfs2 = [&](int cc, int last, ll val){
+        // ans[cc] = dp[cc];
+
+        vector<ll> suml(graph[cc].size()+2,1);
+        vector<ll> sumr = suml;
+
+        suml[0] = val+1;
+        ans[cc] = ans[cc] * (val+1) % m;
         
-        for(int j: graph[cc]){
+        for(int jj = 0; jj < graph[cc].size(); jj++){
+            int j = graph[cc][jj];
+            suml[jj+1] = suml[jj];
             if(j == last) continue;
             // dp[cc] *= expo(dp[j]+1, m-2, m);
-            dp[cc] /= dp[j]+1;
-            dp[cc] %= m;
-            dp[j] *= (dp[cc]+1) % m;
-            dp[j] %= m;
+            
+            suml[jj+1] = suml[jj+1] * (dp[j]+1) % m;
 
-            dfs2(j, cc);
-
-            dp[cc] *= dp[j]+1;
-            dp[cc] %= m;
+            ans[cc] = ans[cc] * (dp[j]+1) % m;
         }
+
+        for(int jj = graph[cc].size()-1; jj > -1; jj--){
+            sumr[jj+1] = sumr[jj+2];
+            int j = graph[cc][jj];
+
+            if(j == last) continue;
+
+            sumr[jj+1] = sumr[jj+1] * (dp[j]+1) % m;
+        }
+
+        for(int jj = 0; jj < graph[cc].size(); jj++){
+            int j = graph[cc][jj];
+
+            if(j == last) continue;
+
+            ll val2 = suml[jj] * sumr[jj+2] % m;
+
+            dfs2(j, cc, val2);
+        }
+
+        return;
     };
 
-    dfs2(0,0);
+    dfs2(0,0,0);
 
     for(ll i: ans) cout << i << '\n';
 

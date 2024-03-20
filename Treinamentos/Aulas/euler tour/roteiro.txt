@@ -1,0 +1,5 @@
+aplicação direta 1 - https://cses.fi/problemset/task/1137
+aplicação direta 2 - https://cses.fi/problemset/task/1138
+max flow - http://www.usaco.org/index.php?page=viewproblem2&cpid=576
+putovanje - https://oj.uz/problem/view/COCI20_putovanje
+happy life in university - https://codeforces.com/contest/1916/problem/E
