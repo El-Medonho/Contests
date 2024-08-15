@@ -36,8 +36,47 @@ mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
 const int mod = 1e9+7;
 
+int print(pair<int,int> c){
+    auto[a,b] = c;
+
+    cout << "? " << a+1 << ' ' << b+1 << endl;
+    cout.flush();
+
+    int x; cin >> x;
+    return x;
+}
+
 signed solve(){
     
+    int n; cin >> n;
+
+    if(n < 10){
+        int mx = -1;
+
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                mx = max(mx, print({i,j}));
+            }
+        }
+
+        cout << "! " << mx << endl;
+
+        return 0;
+    }
+
+    int ml = n/2;
+
+    int ans = -1;
+
+
+
+    for(int i = 0; i < n; i++){
+        int h = print({i, ml});
+
+        ans = max(ans, h);
+
+        
+    }
 
     return 0;
 }

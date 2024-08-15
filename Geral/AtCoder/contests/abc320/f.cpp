@@ -40,9 +40,52 @@ signed solve(){
 
     int n,h; cin >> n >> h;
 
-    vector<vector<int>> dp(n, vector<int> (301, 1e9));
+    vector<vector<vector<int>>> dp(n+1, vector<vector<int>>(305, vector<int>(305, 1e9)));
 
+    for(int i = 0; i <= h; i++){
+        dp[0][h][i] = 0;
+    }
+
+    vector<int> x(n);
+
+    for(int &i: x) cin >> i;
+
+    if(n == 1){
+        cout << (2*x[0] <= h ? 0 : -1) << endl;
+        return 0;
+    }
     
+    vector<int> f(n-1), p(n-1);
+
+    for(int i = 0; i < n-1; i++){
+        cin >> p[i] >> f[i];
+    }
+
+    for(int i = 0; i < n; i++){
+        int d = x[i];
+        if(i > 0) d -= x[i-1];
+        for(int hl = 0; hl <= h; hl++){
+            for(int hr = 0; hr <= h; hr++){
+                
+                if(hl+d <= h && hr - d >= 0)    
+                    dp[i+1][hl][hr] = min(dp[i+1][hl][hr], dp[i][hl+d][hr-d]);
+
+                if(i != n-1 && hl+d <= h && hr - d >= 0)
+                    dp[i+1][min(hl+f[i], h)][hr] = min(dp[i+1][min(hl+f[i], h)][hr], dp[i][hl+d][hr-d] + p[i]);
+
+                int hhr = min(h, hr+f[i]);
+                
+                if(i != n-1 && hl+d <= h && hhr - d >= 0)
+                    dp[i+1][hl][hr] = min(dp[i+1][hl][hr], dp[i][hl+d][hhr-d] + p[i]);
+            }
+        }
+    }
+
+    int ans = 1e9;
+
+    for(int i = 0; i <= h; i++) ans = min(ans, dp[n][i][i]);
+
+    cout << (ans == 1e9 ? -1 : ans) << endl;
     
 
     return 0;
