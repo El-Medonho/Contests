@@ -4,10 +4,10 @@ using namespace std;
 
 template <class T> struct Seg{
     int n, m = 1;
-    T neutral=0;    //remember to change
+    T neutral=0;
     vector<T> tree, lazy;
     T join(const T &a, const T &b){     
-        return (a&b);       //remember to change
+        return (a&b);
     }
     Seg(int n, vector<T> ini = {}) : n(n) {
         while(m < n) m<<=1;
@@ -22,7 +22,7 @@ template <class T> struct Seg{
     }
     void unlazy(int node, int l, int r){
         if(lazy[node]){
-            tree[node]|=lazy[node]; //remember to change
+            tree[node]|=lazy[node];
             if(l!=r){
                 lazy[2*node]|=lazy[node];
                 lazy[2*node+1]|=lazy[node];

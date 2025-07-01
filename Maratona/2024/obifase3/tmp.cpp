@@ -1,0 +1,1 @@
+print(dissonancia*2)

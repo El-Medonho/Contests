@@ -34,54 +34,94 @@ typedef tree<int,null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_
 
 mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
 
+const int mxn = 1e6+3;
+
+vector<int> graph[mxn];
+int freq[mxn], vis[mxn], ch[mxn], sz[mxn], par[mxn];
+ll ans = 0;
+int n = 1000000;
+
 signed solve(){
 
-    int n; cin >> n;
-
-    vector<vector<int>> graph(n);
+    cin >> n;
 
     for(int i = 1; i < n; i++){
-        int x; cin >> x; x--;
-        graph[x].push_back(i);
+        int a = 1; 
+        cin >> a;
+        a--;
+        graph[a].push_back(i);
+        sz[a]++; par[i] = a;
     }
 
-    vector<int> sz(n, 1);
-    vector<ll> dp(n, 0);
+    queue<int> qww;
 
-    function<void(int)> dfs;
+    for(int i = 0; i < n; i++){
+        if(sz[i] == 0) qww.push(i);
+    }
 
-    dfs = [&](int cc){
-        int mx = 0;
-        vector<bool> save(n, 0);
-        save[0] = 1;
+    while(!qww.empty()){
+        int cc = qww.front(); qww.pop();
+
+        sz[par[cc]]--;
+        if(sz[par[cc]] == 0) qww.push(par[cc]);
+
+        ll tot = 0;
+
+        int H = 0;
 
         for(int j: graph[cc]){
-            dfs(j);
+            ch[cc] += ch[j]+1;
+            tot += ch[j]+1;
+            H = max(H, ch[j]+1);
+        }
 
-            for(int i = mx; i > -1; i--){
-                if(save[i]) save[i+sz[j]] = 1;
+        if(tot == 0) continue;
+
+        if(H >= tot/2){
+            ans += (tot-H) * H;
+            continue;
+        }
+
+        for(int j: graph[cc]){
+            freq[ch[j]+1]++;
+        }
+
+
+        for(int x = 0; x <= tot/2; x++){
+            if(freq[x] > 2){
+                freq[x]--;
+                if(2*x <= tot/2)freq[2*x] += freq[x]/2;
+                freq[x]%=2;
+                freq[x]++;
             }
-            mx += sz[j];
-
-            dp[cc] += dp[j];
-
-            sz[cc] += sz[j];
         }
 
-        ll sum = 0;
+        vis[0] = 1;
 
-        for(ll i = 1; i <= mx; i++){
-            if(save[i]) sum = max(sum, i * (mx-i));
+        for(int x = 0; x <= tot/2; x++){
+            // int h = dp.size();
+
+            while(freq[x]){
+                for(int i = tot/2-x; i > -1; i--){
+                    vis[x+i] |= vis[i];
+                }
+                freq[x]--;
+            }
         }
 
-        dp[cc] += sum;
+        ll cans = 0;
 
-        return;
-    };
+        for(int i = tot/2; i > -1; i--){
+            if(!vis[i]) continue;
+            vis[i] = 0;
 
-    dfs(0);
+            cans = max(cans, (tot-i) * i);
+        }
 
-    cout << dp[0] << endl; 
+        ans += cans;
+    }
+
+    cout << ans << endl;
     
 
     return 0;
