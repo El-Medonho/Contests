@@ -22,98 +22,72 @@ using namespace std;
 
 typedef long long ll;
 
-int inf = 1e9;
+// achar o cara menor que zero mais a direita
+// achar o cara igual a 0 com menor indice a direita desse malandro
 
-signed solve(){
-    
-    int n; cin >> n;
-    int m; cin >> m;
-    int s; cin >> s; s--;
 
-    vector<vector<int>> graph(n);
+struct Seg {
+	vector<pair<ll,int>> tree; 
+	vector<ll> lazy;
+	int n = 1;
 
-    for(int i = 0; i < m; i++){
-        int a,b; cin >> a >> b; a--; b--;
-        graph[a].push_back(b);
-    }
+	Seg(int _n) : n(_n) {
+		tree.resize(2*n, make_pair(0LL, 1e7)); lazy.resize(2*n, 0);
+	}
 
-    vector<int> vis(n, 0), pai(n, -1), repr(n, -1);
+	pair<ll,int> join(pair<ll,int> &a, pair<ll,int> &b) {
+		if(a.first < b.first) {
+			return a;
+		} else if( b.first < a.first) return b;
+		else {
+			if(a.second < b.second) return a;
+			return b;
+		}
+	}
 
-    queue<int> qw; vis[s] = 1;
+	void unlazy(int node) {
+		if(!lazy[node]) return;
+		tree[node].first += lazy[node];
+		if(node < n){
+			lazy[2*node] += lazy[node];
+			lazy[2*node+1] += lazy[node];
+		}
+		lazy[node]=0;
+	}
 
-    for(int j: graph[s]){
-        vis[j] = 1; pai[j] = s; repr[j] = j;
-        qw.push(j);
-    }
+	void upd(int node, int l, int r, int a, int b, ll val) {
+		unlazy(node);
+		if(a > r || b < l) return;
+		if(l >= a && r <= b){
+			lazy[node] += val;
+			unlazy(node);
+			return;
+		}
+		tree[node] = join(tree[2*node], tree[2*node+1]);
+	}
 
-    int t = -1;
-
-    vector<int> ans(0), ans2(0);
-
-    while(!qw.empty()){
-        int cc = qw.front(); qw.pop();
-
-        for(int j: graph[cc]){
-            if(vis[j]){
-                if(repr[j] == repr[cc] || j == s) continue;
-                else{
-                    t = j;
-                    ans.push_back(t);
-                    while(cc != s){
-                        ans.push_back(cc);
-                        cc = pai[cc];
-                    }
-                    ans.push_back(cc);
-                    break;
-                }
-            }
-
-            
-            qw.push(j); vis[j] = 1;
-            pai[j] = cc; repr[j] = repr[cc];
-        }
-        if(t != -1) break;
-    }
-
-    if(t == -1){
-        cout << "Impossible\n";
-        return 0;
-    }
-
-    cout << "Possible\n";
-
-    cout << ans.size() << endl;
-
-    reverse(ans.begin(), ans.end());
-
-    for(int i: ans) cout << i+1 << ' ';
-    cout << endl;
-
-    int cc = t;
-    while(cc != s){
-        ans2.push_back(cc);
-        cc = pai[cc];
-    }
-    ans2.push_back(cc);
-
-    cout << ans2.size() << endl;
-
-    reverse(ans2.begin(), ans2.end());
-
-    for(int i: ans2) cout << i+1 << ' ';
-    cout << endl;
-
-    return 0;
+	void upd_v(int node, int l, int r, int pos, int label) {
+		if(l == r) tree[node].second = label;
+		if(a > r || b < l) return;
+		
+		tree[node] = join(tree[2*node], tree[2*node+1]);
+	}
 }
 
 signed main(){
     ios_base::sync_with_stdio(false), cin.tie(nullptr);
-
-    int t = 1;
-
-    while(t--){
-        solve();
-    }
+    
+    int n; cin >> n;
+	int N = n+n-1;
+	vector<ll> arr(n);
+	for(ll &i: arr) cin >> i;
+	vector<vector<int>> graph(N);
+	vector<int> pai(N, N-1);
+	for(int i = 1; i < n; i++){
+		int a,b; cin >> a >> b; a--; b--;
+		graph[n-1+i].push_back(a); pai[a] = n-1+i;
+		graph[n-1+i].push_back(b); pai[b] = n-1+i;
+	}
 
     return 0;
 }
