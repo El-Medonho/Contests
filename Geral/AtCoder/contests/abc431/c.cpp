@@ -14,69 +14,65 @@
 // ⠄⣰⡗⠹⣿⣄⠄⠄⠄⢀⣿⣿⣿⣿⣿⣿⠟⣅⣥⣿⣿⣿⣿⠿⠋⠄⠄⣾⡌⢠⣿⡿⠃
 // ⠜⠋⢠⣷⢻⣿⣿⣶⣾⣿⣿⣿⣿⠿⣛⣥⣾⣿⠿⠟⠛⠉⠄⠄
 
-#include "bits/stdc++.h"
 
+#include "bits/stdc++.h"
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/pb_ds/assoc_container.hpp>
+
+using namespace __gnu_pbds;
 using namespace std;
 
-#define endl '\n'
-
+#define endl "\n"
 typedef long long ll;
-typedef pair<ll,ll> pii;
+typedef unsigned long long ull;
+typedef long double ld;
+typedef tree<int,null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
+typedef tree<int,null_type, less_equal<int>, rb_tree_tag, tree_order_statistics_node_update> multiordered_set;  //--set.lower_bound(value) ao inves de find
+
+mt19937 rng((int) std::chrono::steady_clock::now().time_since_epoch().count());
+
+const int mod = 1e9+7;
+const ll inf = 1e18+5;
+
+signed solve(){
+    
+    int n,m,k; cin >> m >> n >> k;
+
+    multiset<int> h;
+    vector<int> b(m);
+
+    
+    for(int &i: b) cin >> i;
+    
+    for(int i = 0; i < n; i++){
+        int x; cin >> x; h.insert(x);
+    }
+    sort(b.rbegin(), b.rend());
+
+    int cnt = 0;
+
+    for(int i = 0; i < m; i++){
+        auto it = h.lower_bound(b[i]);
+        if(it == h.end()) continue;
+
+        h.erase(it); cnt++;
+    }
+
+    if(cnt >= k) cout << "Yes\n";
+    else cout << "No\n";
 
 
+    return 0;
+}
 
 signed main(){
     ios_base::sync_with_stdio(false), cin.tie(nullptr);
 
-    int n,k; cin >> n >> k;
-
-	ll mx = -1e9, nx = 1e9, my = -1e9, ny = 1e9;
-
-	
-	vector<pii> arr(n);
-	
-	for(int i = 0; i < n; i++){
-		ll a,b; cin >> a >> b;
-		mx = max(mx, a); nx = min(nx, a);
-		my = max(my, b); ny = min(ny, b);
-		arr[i] = {a, b};
-	}
-	if(n == 1){
-		cout << 1 << endl;
-		return 0;
-	}
-
-	ll x = mx-nx+1, y = my-ny+1;
-
-	ll kk = max(x, y) - min(x, y);
-
-	ll ans = 0;
-
-	if(kk >= k) ans = max(x, y) * (min(x, y) + k);
-	else{
-		ll h = max(x, y); ll hh = h;
-		kk = k - kk;
-		h += kk/2; kk -= kk/2; hh += kk;
-		ans = h * hh;
-	}
-
-	vector<pii> dir = {{1,1}, {-1,1}, {1,-1}, {-1,-1}};
-
-	for(auto [a, b]: arr){
-		ll cans = 0;
-		
-		for(auto[p, q]: dir){
-			ll aa = a + (k*p), bb = b + (k*q);
-			ll mmx = max(mx, aa), mnx = min(nx, aa);
-			ll mmy = max(my, bb), mny = min(ny, bb);
-			cans = max(cans, (mmx-mnx+1) * (mmy-mny+1));
-		}
-
-		ans = max(ans, cans);
-	}
-
-	cout << ans << endl;
-
+    int t = 1;
+    // cin >> t;
+    while(t--){
+        solve();
+    }    
 
     return 0;
 }
