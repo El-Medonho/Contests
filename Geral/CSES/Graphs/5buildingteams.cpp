@@ -58,6 +58,7 @@ int main(){
         if(visited[i] == -1){
             if(!bfs(i)){
                 cout << "IMPOSSIBLE" << endl;
+                return 0;
             }
         }
     }
